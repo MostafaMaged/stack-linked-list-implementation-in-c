@@ -8,13 +8,12 @@ typedef struct{
 }Node;
 
 Node *top = NULL;
-Node *head = NULL;
 
 void Push(int);
 void Pop();
 int Top();
 bool IsEmpty();
-void Print();
+void Print(Node*);
 
 int main()
 {
@@ -64,7 +63,8 @@ int main()
                     }
                     break;
                 case 5:
-                    Print();
+                    Print(top);
+                    printf("\n");
                     break;
                 default:
                     printf("you entered invalid choice .\n");
@@ -82,13 +82,7 @@ int main()
 void Push(int data){
     Node *newData = malloc(sizeof(Node));
     newData->data = data;
-    newData->next = NULL;
-    if(head == NULL){
-        head = newData;
-        top = newData;
-        return;
-    }
-    top->next = newData;
+    newData->next = top;
     top = newData;
 }
 
@@ -97,18 +91,9 @@ void Pop(){
         printf("stack is empty.\n");
         return;
     }
-    if(head == top){
-        free(top);
-        head = NULL;
-        top = NULL;
-        return;
-    }
-    Node *temp = head;
-    while(temp->next != top){
-        temp=temp->next;
-    }
-    free(top);
-    top = temp;
+    Node *temp = top;
+    top = top->next;
+    free(temp);
 }
 
 int Top(){
@@ -123,15 +108,13 @@ bool IsEmpty(){
     return top == NULL;
 }
 
-void Print(){
+void Print(Node *temp){
     if(IsEmpty()){
-        printf("stack is empty.\n");
+        printf("stack is empty.");
         return;
     }
-    Node *temp = head;
-    while(temp != top){
-        printf("%d\t", temp->data);
-        temp = temp->next;
-    }
-    printf("%d\n", top->data);
+    if(temp == NULL) return;
+    Print(temp->next);
+    printf("%d\t", temp->data);
 }
+
